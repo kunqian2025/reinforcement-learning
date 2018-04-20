@@ -36,8 +36,9 @@ end
 
 
 for itr=1:NUM_ITERATIONS 
-    env.reset(env.locA);  
+    env.reset([0 0]);  
     if ~isTraining && ~isTesting 
+		env.reset(env.locA);
         env.render();%display the moving environment
     end
     
