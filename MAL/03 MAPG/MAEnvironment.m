@@ -1,10 +1,10 @@
 classdef MAEnvironment < handle
 	properties (SetAccess = private)
-        sizeMap = [300 300];%size of the map
+        sizeMap = [30 30];%size of the map
 		actionSpace = [1 2 3 4];
-		locA = [70 70; 70 210];%default location of the agent
-        locA_R = [70 210; 70 70];%default location of the agent
-		locG = [140 140; 210 140];%location of the goal
+		locA = [7 7; 7 21];%default location of the agent
+        locA_R = [7 21; 7 7];%default location of the agent
+		locG = [14 14; 21 14];%location of the goal
 		colorA = 'y';
 		colorG = 'r';
         radii_A = 0.6;
@@ -70,7 +70,7 @@ classdef MAEnvironment < handle
             text(centers(1),centers(2)+2*obj.radii_A,txt);
 			
 			centers = obj.current_location(2,:);
-			viscircles(centers,obj.radii_A,'Color',obj.colorA);
+			viscircles(centers,obj.radii_A,'Color','b');
             txt =  strcat('\leftarrow Agnet', '(', num2str(centers(1)), ',',  num2str(centers(2)), ')');
             text(centers(1),centers(2)+2*obj.radii_A,txt);
 

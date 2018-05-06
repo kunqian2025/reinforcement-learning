@@ -3,24 +3,23 @@ close all;
 clear; clc;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-isTraining = false; %declare if it is training
+isTraining = true; %declare if it is training
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 addpath('../Basic Functions');
 env = MAEnvironment;
 
-alpha = 0.005; %learning rate settings 
+alpha = 0.0025; %learning rate settings 
 gamma = 0.99; %discount factor
-maxItr = 6000;%maximum iterations for ending one episode
+maxItr = 3000;%maximum iterations for ending one episode
 
 a1_p_estimator = PolicyEstimator(env,alpha);
 a2_p_estimator = PolicyEstimator(env,alpha);
-v_estimator = ValueEstimator(env,alpha*10);
+v_estimator = ValueEstimator(env,alpha*20);
 
 if isTraining
-    NUM_ITERATIONS = 100000; %change this value to set max iterations
+    NUM_ITERATIONS = 5000; %change this value to set max iterations
     iterationCount(NUM_ITERATIONS) = 0;
-    rwd(NUM_ITERATIONS) = 0;
 else
     NUM_ITERATIONS = 5;
     load('agent1_policy_weights.mat','-mat');
@@ -31,17 +30,15 @@ else
     v_estimator.set_weights(v_weights);
 end
 
+rwd(NUM_ITERATIONS) = 0;
 for itr=1:NUM_ITERATIONS 
-    env.reset([0 0; 0 0]); 
+%     env.reset([0 0; 0 0]); 
+    env.reset(env.locA); 
     if ~isTraining
-        env.reset(env.locA); 
         env.render();%display the moving environment
     end
-	state = env.current_location;
-    fprintf('initial location: %d, %d; %d, %d\n',state');
-    
+	state = env.current_location;    
     countActions = 0;%count how many actions in one iteration  
-    reward = 0;
     done = false;
     
     while ~done   
@@ -55,8 +52,8 @@ for itr=1:NUM_ITERATIONS
             prob_a2 = a2_p_estimator.predict(state,env.actionSpace);
             action = [randsample(env.actionSpace,1,true,prob_a1) ...
                       randsample(env.actionSpace,1,true,prob_a2)]; 
-%             action = [action(1) 0];
             [next_state, reward, done] = env.step(action);
+            rwd(itr) = rwd(itr) + reward;
             state = next_state;
             env.render();%display the moving environment
             continue;
@@ -77,14 +74,13 @@ for itr=1:NUM_ITERATIONS
         v_estimator.update(state,td_err);
         a1_p_estimator.update(state,action(1),td_err);
         a2_p_estimator.update(state,action(2),td_err);
-        
+        rwd(itr) = rwd(itr) + reward;
         state = next_state;
     end
     fprintf('final location: %d, %d; %d, %d\n',state');
-    fprintf('%d th iteration, %d actions taken, final reward is %d.\n',itr,countActions,reward);
+    fprintf('%d th iteration, %d actions taken, final reward is %d, accumulated reward is %d.\n',itr,countActions,reward,rwd(itr));
     if isTraining
         iterationCount(itr) = countActions;
-        rwd(itr) = reward;
     end
 end
 if isTraining
