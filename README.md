@@ -1,6 +1,6 @@
 # reinforcement-learning
 
-To finish my thesis, "Methods and implementations for coordinated multi-agent learning", which involves a research on RL from single agent to multi-agent, as well as the state-of-the-art in collaborative and coordinated multi-agent learning algorithms and implementations, the implementations in MATLAB for some RL methods are done. The thesis paper shall be uploaded in a not long future, where contains the references.
+To finish my thesis, "Methods and implementations for coordinated multi-agent learning", which involves a research on RL from single agent to multi-agent, as well as the state-of-the-art in collaborative and coordinated multi-agent learning algorithms and implementations, the implementations in MATLAB for some RL methods are done. The thesis paper is also uploaded, where contains the references.
 
 ## Single Agent Reinforcement Learning
 
